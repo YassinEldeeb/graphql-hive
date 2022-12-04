@@ -136,7 +136,7 @@ const Inner = ({
       monthlyLimits: {
         operations: operationsRateLimit * 1_000_000,
       },
-      paymentMethodId: paymentMethodId,
+      paymentMethodId,
       couponCode: couponCode.trim() === '' ? null : couponCode.trim(),
     });
   };

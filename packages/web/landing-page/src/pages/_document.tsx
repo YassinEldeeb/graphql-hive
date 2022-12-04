@@ -72,7 +72,7 @@ export default class MyDocument extends Document {
           <link rel="manifest" href="/site.webmanifest" />
           <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0B0D11" />
           <meta name="msapplication-TileColor" content="#0B0D11" />
-          <meta name="theme-color" content="#0B0D11"></meta>
+          <meta name="theme-color" content="#0B0D11" />
         </Head>
         <body>
           <Main />

@@ -737,7 +737,7 @@ describe('update', () => {
         document: UpdateOIDCIntegrationMutation,
         variables: {
           input: {
-            oidcIntegrationId: oidcIntegrationId,
+            oidcIntegrationId,
             clientId: 'bbbb',
             clientSecret: 'bbbbbbbbbbbb',
             oauthApiUrl: 'http://localhost:8888/bbbb',

@@ -84,11 +84,11 @@ export class ArtifactStorageReader {
 
     if (response.status === 200) {
       return await this.generatePresignedGetUrl(key);
-    } else if (response.status === 404) {
-      return null;
-    } else {
-      const body = await response.text();
-      throw new Error(`HEAD request failed with status ${response.status}: ${body}`);
     }
+    if (response.status === 404) {
+      return null;
+    }
+    const body = await response.text();
+    throw new Error(`HEAD request failed with status ${response.status}: ${body}`);
   }
 }

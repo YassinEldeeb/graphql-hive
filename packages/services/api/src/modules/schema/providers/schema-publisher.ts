@@ -128,7 +128,7 @@ export class SchemaPublisher {
         project: input.project,
         target: input.target,
       },
-      baseSchema: baseSchema,
+      baseSchema,
       experimental_acceptBreakingChanges: false,
       project,
     });
@@ -480,7 +480,7 @@ export class SchemaPublisher {
           project: projectId,
           target: targetId,
         },
-        baseSchema: baseSchema,
+        baseSchema,
         experimental_acceptBreakingChanges: input.experimental_acceptBreakingChanges === true,
         project,
       });

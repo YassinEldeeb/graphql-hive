@@ -86,7 +86,7 @@ export function deployUsageIngestor({
           cpuAverageToScale: 60,
           limit: cpuLimit,
         },
-        maxReplicas: maxReplicas,
+        maxReplicas,
       },
     },
     [clickhouse.deployment, clickhouse.service, dbMigrations],

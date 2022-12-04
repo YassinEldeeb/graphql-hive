@@ -10,7 +10,7 @@ async function execute(url: string, options: Request | RequestInit = {}): Promis
       Authorization: `Bearer ${CF_BEARER_TOKEN}`,
       'Content-type': 'application/json',
       Accept: 'application/json',
-      ...(options.headers || {}),
+      ...options.headers,
     },
     ...options,
   };
