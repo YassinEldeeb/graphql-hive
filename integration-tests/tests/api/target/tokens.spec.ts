@@ -1,14 +1,14 @@
-import { TargetAccessScope, ProjectType } from '@app/gql/graphql';
+import { ProjectType, TargetAccessScope } from '@app/gql/graphql';
+import { authenticate } from '../../../testkit/auth';
 import {
   createOrganization,
-  joinOrganization,
   createProject,
   createToken,
-  updateMemberAccess,
   inviteToOrganization,
+  joinOrganization,
   readTokenInfo,
+  updateMemberAccess,
 } from '../../../testkit/flow';
-import { authenticate } from '../../../testkit/auth';
 
 test('setting no scopes equals to readonly for organization, project, target', async () => {
   const { access_token: owner_access_token } = await authenticate('main');

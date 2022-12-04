@@ -1,14 +1,14 @@
-import { TargetAccessScope, ProjectType } from '@app/gql/graphql';
 import { createHash } from 'node:crypto';
-import { schemaPublish, schemaCheck } from '../../testkit/cli';
+import { ProjectType, TargetAccessScope } from '@app/gql/graphql';
 import { authenticate } from '../../testkit/auth';
+import { schemaCheck, schemaPublish } from '../../testkit/cli';
 import {
   createOrganization,
-  joinOrganization,
   createProject,
   createToken,
   fetchSupergraphFromCDN,
   inviteToOrganization,
+  joinOrganization,
 } from '../../testkit/flow';
 
 test('can publish and check a schema with target:registry:read access', async () => {

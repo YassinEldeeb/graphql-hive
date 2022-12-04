@@ -1,13 +1,13 @@
-import { TargetAccessScope, ProjectType } from '@app/gql/graphql';
+import { ProjectType, TargetAccessScope } from '@app/gql/graphql';
+import { authenticate } from '../../../testkit/auth';
 import {
   createOrganization,
-  publishSchema,
   createProject,
   createToken,
   fetchSchemaFromCDN,
+  publishSchema,
   schemaSyncCDN,
 } from '../../../testkit/flow';
-import { authenticate } from '../../../testkit/auth';
 
 test('marking only the most recent version as valid result in an update of CDN', async () => {
   const { access_token: owner_access_token } = await authenticate('main');

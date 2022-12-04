@@ -1,14 +1,14 @@
-import { TargetAccessScope, ProjectType } from '@app/gql/graphql';
+import { ProjectType, TargetAccessScope } from '@app/gql/graphql';
+import { authenticate } from '../../../testkit/auth';
 import {
-  createOrganization,
-  joinOrganization,
-  publishSchema,
   checkSchema,
+  createOrganization,
   createProject,
   createToken,
   inviteToOrganization,
+  joinOrganization,
+  publishSchema,
 } from '../../../testkit/flow';
-import { authenticate } from '../../../testkit/auth';
 
 test('can check a schema with target:registry:read access', async () => {
   const { access_token: owner_access_token } = await authenticate('main');

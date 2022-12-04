@@ -1,6 +1,6 @@
 import { gql } from '@app/gql';
-import { execute } from '../../testkit/graphql';
 import { authenticate } from '../../testkit/auth';
+import { execute } from '../../testkit/graphql';
 
 test('should auto-create an organization for freshly signed-up user', async () => {
   const { access_token } = await authenticate('main');

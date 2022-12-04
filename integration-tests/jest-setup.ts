@@ -1,7 +1,7 @@
-import { createPool } from 'slonik';
 import * as utils from '@n1ru4l/dockest/test-helper';
-import { resetDb } from './testkit/db';
+import { createPool } from 'slonik';
 import { resetClickHouse } from './testkit/clickhouse';
+import { resetDb } from './testkit/db';
 import { resetRedis } from './testkit/redis';
 
 const dbAddress = utils.getServiceAddress('db', 5432);

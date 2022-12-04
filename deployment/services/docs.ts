@@ -1,6 +1,6 @@
 import * as azure from '@pulumi/azure';
-import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
 import { PackageHelper } from '../utils/pack';
+import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
 
 export type Docs = ReturnType<typeof deployDocs>;
 

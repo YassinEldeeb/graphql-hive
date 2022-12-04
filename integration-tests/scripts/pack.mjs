@@ -9,12 +9,12 @@
  */
 
 import { exec } from 'child_process';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import fsExtra from 'fs-extra';
 import glob from 'glob';
 import rimraf from 'rimraf';
-import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const cwd = path.resolve(__dirname, '../..');

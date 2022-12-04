@@ -1,6 +1,6 @@
 import { ProjectType } from '@app/gql/graphql';
-import { createOrganization, createProject, renameProject } from '../../../testkit/flow';
 import { authenticate } from '../../../testkit/auth';
+import { createOrganization, createProject, renameProject } from '../../../testkit/flow';
 
 test('creating a project should result in creating the development, staging and production targets', async () => {
   const { access_token } = await authenticate('main');

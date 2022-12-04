@@ -1,12 +1,12 @@
 import { ProjectType } from '@app/gql/graphql';
+import { authenticate } from '../../testkit/auth';
 import {
   createOrganization,
   createProject,
   createToken,
-  readTokenInfo,
   deleteTokens,
+  readTokenInfo,
 } from '../../testkit/flow';
-import { authenticate } from '../../testkit/auth';
 
 test('deleting a token should clear the cache', async () => {
   const { access_token: owner_access_token } = await authenticate('main');

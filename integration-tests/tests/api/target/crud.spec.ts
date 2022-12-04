@@ -1,6 +1,6 @@
 import { ProjectType } from '@app/gql/graphql';
-import { createOrganization, createProject, renameTarget } from '../../../testkit/flow';
 import { authenticate } from '../../../testkit/auth';
+import { createOrganization, createProject, renameTarget } from '../../../testkit/flow';
 
 test('renaming a target should result changing its cleanId', async () => {
   const { access_token } = await authenticate('main');

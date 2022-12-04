@@ -1,10 +1,11 @@
-import * as pulumi from '@pulumi/pulumi';
 import * as azure from '@pulumi/azure';
+import * as pulumi from '@pulumi/pulumi';
 import { parse } from 'pg-connection-string';
-import { DbMigrations } from './db-migrations';
-import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
 import { DeploymentEnvironment } from '../types';
 import { PackageHelper } from '../utils/pack';
+import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
+import { DbMigrations } from './db-migrations';
+
 const commonConfig = new pulumi.Config('common');
 const apiConfig = new pulumi.Config('api');
 

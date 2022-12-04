@@ -1,12 +1,12 @@
-import * as pulumi from '@pulumi/pulumi';
 import * as azure from '@pulumi/azure';
-import { GraphQL } from './graphql';
-import { DbMigrations } from './db-migrations';
-import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
-import { serviceLocalEndpoint } from '../utils/local-endpoint';
+import * as pulumi from '@pulumi/pulumi';
 import { DeploymentEnvironment } from '../types';
+import { serviceLocalEndpoint } from '../utils/local-endpoint';
 import { PackageHelper } from '../utils/pack';
+import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
+import { DbMigrations } from './db-migrations';
 import { Docs } from './docs';
+import { GraphQL } from './graphql';
 
 const appConfig = new pulumi.Config('app');
 const commonConfig = new pulumi.Config('common');

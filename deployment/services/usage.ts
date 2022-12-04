@@ -1,14 +1,14 @@
-import * as pulumi from '@pulumi/pulumi';
 import * as azure from '@pulumi/azure';
-import { Tokens } from './tokens';
-import { DbMigrations } from './db-migrations';
-import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
-import { PackageHelper } from '../utils/pack';
-import { serviceLocalEndpoint } from '../utils/local-endpoint';
+import * as pulumi from '@pulumi/pulumi';
 import { DeploymentEnvironment } from '../types';
+import { isProduction } from '../utils/helpers';
+import { serviceLocalEndpoint } from '../utils/local-endpoint';
+import { PackageHelper } from '../utils/pack';
+import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
+import { DbMigrations } from './db-migrations';
 import { Kafka } from './kafka';
 import { RateLimitService } from './rate-limit';
-import { isProduction } from '../utils/helpers';
+import { Tokens } from './tokens';
 
 const commonConfig = new pulumi.Config('common');
 const commonEnv = commonConfig.requireObject<Record<string, string>>('env');

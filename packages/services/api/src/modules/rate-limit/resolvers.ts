@@ -1,5 +1,5 @@
-import { RateLimitProvider } from './providers/rate-limit.provider';
 import { RateLimitModule } from './__generated__/types';
+import { RateLimitProvider } from './providers/rate-limit.provider';
 
 export const resolvers: RateLimitModule.Resolvers = {
   Organization: {

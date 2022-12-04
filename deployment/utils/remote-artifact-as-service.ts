@@ -1,10 +1,10 @@
-import * as kx from '@pulumi/kubernetesx';
-import * as k8s from '@pulumi/kubernetes';
 import * as azure from '@pulumi/azure';
+import * as k8s from '@pulumi/kubernetes';
+import * as kx from '@pulumi/kubernetesx';
 import * as pulumi from '@pulumi/pulumi';
-import { PodBuilder, normalizeEnv } from './pod-builder';
-import { PackageInfo } from './pack';
 import { isDefined } from './helpers';
+import { PackageInfo } from './pack';
+import { normalizeEnv, PodBuilder } from './pod-builder';
 
 const DEFAULT_IMAGE = 'node:16.13.2-alpine3.15';
 

@@ -1,6 +1,6 @@
-import { fetch } from '@whatwg-node/fetch';
-import { createTRPCProxyClient, httpLink } from '@trpc/client';
 import type { EmailsApi } from '@hive/emails';
+import { createTRPCProxyClient, httpLink } from '@trpc/client';
+import { fetch } from '@whatwg-node/fetch';
 
 export function createEmailScheduler(config?: { endpoint: string }) {
   const api = config?.endpoint

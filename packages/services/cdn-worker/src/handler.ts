@@ -1,3 +1,4 @@
+import { buildSchema, introspectionFromSchema } from 'graphql';
 import {
   CDNArtifactNotFound,
   InvalidArtifactMatch,
@@ -6,7 +7,6 @@ import {
   MissingAuthKeyResponse,
   MissingTargetIDErrorResponse,
 } from './errors';
-import { buildSchema, introspectionFromSchema } from 'graphql';
 import type { KeyValidator } from './key-validation';
 
 async function createETag(value: string) {

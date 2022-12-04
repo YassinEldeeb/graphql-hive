@@ -1,23 +1,23 @@
-import { TargetAccessScope, ProjectType } from '@app/gql/graphql';
+import { ProjectType, TargetAccessScope } from '@app/gql/graphql';
+import { fetch } from '@whatwg-node/fetch';
+import { authenticate } from '../../../testkit/auth';
 import {
+  createCdnAccess,
   createOrganization,
-  joinOrganization,
-  publishSchema,
   createProject,
+  createTarget,
   createToken,
-  updateBaseSchema,
-  fetchVersions,
   fetchLatestSchema,
   fetchLatestValidSchema,
-  updateSchemaVersionStatus,
-  fetchSchemaFromCDN,
-  createTarget,
   fetchMetadataFromCDN,
-  createCdnAccess,
+  fetchSchemaFromCDN,
+  fetchVersions,
   inviteToOrganization,
+  joinOrganization,
+  publishSchema,
+  updateBaseSchema,
+  updateSchemaVersionStatus,
 } from '../../../testkit/flow';
-import { authenticate } from '../../../testkit/auth';
-import { fetch } from '@whatwg-node/fetch';
 
 test('cannot publish a schema without target:registry:write access', async () => {
   const { access_token: owner_access_token } = await authenticate('main');

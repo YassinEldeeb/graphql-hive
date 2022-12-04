@@ -1,12 +1,12 @@
-import { TargetAccessScope, ProjectType } from '@app/gql/graphql';
+import { ProjectType, TargetAccessScope } from '@app/gql/graphql';
 import formatISO from 'date-fns/formatISO';
 import subHours from 'date-fns/subHours';
 import { authenticate } from '../../testkit/auth';
 import {
-  publishSchema,
   createOrganization,
   createProject,
   createToken,
+  publishSchema,
   readOperationsStats,
   waitFor,
 } from '../../testkit/flow';

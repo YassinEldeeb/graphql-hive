@@ -1,5 +1,5 @@
-import { createOrganization, renameOrganization } from '../../../testkit/flow';
 import { authenticate } from '../../../testkit/auth';
+import { createOrganization, renameOrganization } from '../../../testkit/flow';
 
 test('renaming an organization should result changing its cleanId', async () => {
   const { access_token } = await authenticate('main');

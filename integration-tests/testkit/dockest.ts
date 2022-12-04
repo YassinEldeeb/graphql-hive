@@ -1,13 +1,13 @@
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { DockestService, execa } from '@n1ru4l/dockest';
+import { ReadinessCheck } from '@n1ru4l/dockest/dist/@types.js';
 import {
   containerIsHealthyReadinessCheck,
   zeroExitCodeReadinessCheck,
 } from '@n1ru4l/dockest/dist/readiness-check/index.js';
-import { ReadinessCheck } from '@n1ru4l/dockest/dist/@types.js';
-import { mapTo, take, filter } from 'rxjs/operators/index.js';
 import { DepGraph } from 'dependency-graph';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { filter, mapTo, take } from 'rxjs/operators/index.js';
 import { parse } from 'yaml';
 
 export const startReadinessCheck: ReadinessCheck = ({ runner }) => {

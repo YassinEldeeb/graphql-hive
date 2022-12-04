@@ -1,11 +1,11 @@
-import Toucan from 'toucan-js';
-import itty from 'itty-router';
-import { ArtifactStorageReader } from '@hive/api/src/modules/schema/providers/artifact-storage-reader';
 import { S3Client } from '@aws-sdk/client-s3';
-import { createIsKeyValid } from './key-validation';
+import { ArtifactStorageReader } from '@hive/api/src/modules/schema/providers/artifact-storage-reader';
+import itty from 'itty-router';
+import Toucan from 'toucan-js';
+import { createArtifactRequestHandler } from './artifact-handler';
 import { UnexpectedError } from './errors';
 import { createRequestHandler } from './handler';
-import { createArtifactRequestHandler } from './artifact-handler';
+import { createIsKeyValid } from './key-validation';
 
 /**
  * KV Storage for the CDN

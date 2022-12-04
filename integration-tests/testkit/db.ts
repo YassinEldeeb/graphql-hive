@@ -1,4 +1,4 @@
-import { sql, DatabasePoolConnection } from 'slonik';
+import { DatabasePoolConnection, sql } from 'slonik';
 
 export const resetDb = async (conn: DatabasePoolConnection) => {
   const migrationTables = ['migrations'];

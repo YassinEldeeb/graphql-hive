@@ -1,6 +1,6 @@
 import { Dockest, logLevel } from '@n1ru4l/dockest';
-import { cleanDockerContainers, createServices } from './testkit/dockest';
 import dotenv from 'dotenv';
+import { cleanDockerContainers, createServices } from './testkit/dockest';
 
 /**
  * Run only the tests that were specified with a pattern or filename:

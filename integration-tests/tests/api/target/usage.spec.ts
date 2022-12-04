@@ -1,30 +1,30 @@
 import {
-  TargetAccessScope,
-  ProjectType,
-  ProjectAccessScope,
   OrganizationAccessScope,
+  ProjectAccessScope,
+  ProjectType,
+  TargetAccessScope,
 } from '@app/gql/graphql';
+// eslint-disable-next-line hive/enforce-deps-in-dev
+import { normalizeOperation } from '@graphql-hive/core';
 import formatISO from 'date-fns/formatISO';
 import subHours from 'date-fns/subHours';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { parse, print } from 'graphql';
+import { authenticate } from '../../../testkit/auth';
+import { clickHouseQuery } from '../../../testkit/clickhouse';
 import {
+  checkSchema,
   createOrganization,
   createProject,
   createTarget,
   createToken,
   publishSchema,
-  checkSchema,
+  readOperationsStats,
   setTargetValidation,
   updateTargetValidationSettings,
-  readOperationsStats,
   waitFor,
 } from '../../../testkit/flow';
-import { authenticate } from '../../../testkit/auth';
 import { collect, CollectedOperation } from '../../../testkit/usage';
-import { clickHouseQuery } from '../../../testkit/clickhouse';
-// eslint-disable-next-line hive/enforce-deps-in-dev
-import { normalizeOperation } from '@graphql-hive/core';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { parse, print } from 'graphql';
 
 function ensureNumber(value: number | string): number {
   if (typeof value === 'number') {

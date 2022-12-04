@@ -1,10 +1,10 @@
-import * as pulumi from '@pulumi/pulumi';
 import * as azure from '@pulumi/azure';
-import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
+import * as pulumi from '@pulumi/pulumi';
 import { DeploymentEnvironment } from '../types';
-import { Redis } from './redis';
-import { PackageHelper } from '../utils/pack';
 import { serviceLocalEndpoint } from '../utils/local-endpoint';
+import { PackageHelper } from '../utils/pack';
+import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
+import { Redis } from './redis';
 
 const commonConfig = new pulumi.Config('common');
 const commonEnv = commonConfig.requireObject<Record<string, string>>('env');

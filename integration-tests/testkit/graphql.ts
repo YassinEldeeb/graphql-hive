@@ -1,8 +1,8 @@
+import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import * as utils from '@n1ru4l/dockest/test-helper';
+import { createFetch } from '@whatwg-node/fetch';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ExecutionResult, print } from 'graphql';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { createFetch } from '@whatwg-node/fetch';
 
 const registryAddress = utils.getServiceAddress('server', 3001);
 

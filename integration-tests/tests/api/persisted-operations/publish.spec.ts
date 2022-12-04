@@ -1,11 +1,11 @@
-import { ProjectType, ProjectAccessScope } from '@app/gql/graphql';
+import { ProjectAccessScope, ProjectType } from '@app/gql/graphql';
+import { authenticate } from '../../../testkit/auth';
 import {
   createOrganization,
-  publishPersistedOperations,
   createProject,
   createToken,
+  publishPersistedOperations,
 } from '../../../testkit/flow';
-import { authenticate } from '../../../testkit/auth';
 
 test('can publish persisted operations only with project:operations-store:write', async () => {
   const { access_token: owner_access_token } = await authenticate('main');

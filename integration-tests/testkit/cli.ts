@@ -1,6 +1,6 @@
-import * as utils from '@n1ru4l/dockest/test-helper';
-import { execa } from '@n1ru4l/dockest';
 import { resolve } from 'path';
+import { execa } from '@n1ru4l/dockest';
+import * as utils from '@n1ru4l/dockest/test-helper';
 
 const registryAddress = utils.getServiceAddress('server', 3001);
 const cliDevLocation = resolve(__dirname, '../../packages/libraries/cli/bin/run');

@@ -1,12 +1,12 @@
-import * as pulumi from '@pulumi/pulumi';
 import * as azure from '@pulumi/azure';
-import { DbMigrations } from './db-migrations';
-import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
-import { PackageHelper } from '../utils/pack';
+import * as pulumi from '@pulumi/pulumi';
 import { DeploymentEnvironment } from '../types';
-import { Clickhouse } from './clickhouse';
-import { Kafka } from './kafka';
 import { isProduction } from '../utils/helpers';
+import { PackageHelper } from '../utils/pack';
+import { RemoteArtifactAsServiceDeployment } from '../utils/remote-artifact-as-service';
+import { Clickhouse } from './clickhouse';
+import { DbMigrations } from './db-migrations';
+import { Kafka } from './kafka';
 
 const commonConfig = new pulumi.Config('common');
 const commonEnv = commonConfig.requireObject<Record<string, string>>('env');

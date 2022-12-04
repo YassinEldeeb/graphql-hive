@@ -1,11 +1,11 @@
 import * as pulumi from '@pulumi/pulumi';
-import { Proxy } from '../utils/reverse-proxy';
 import { CertManager } from '../utils/cert-manager';
+import { Proxy } from '../utils/reverse-proxy';
+import { App } from './app';
+import { Docs } from './docs';
 import { GraphQL } from './graphql';
 import { LandingPage } from './landing-page';
-import { App } from './app';
 import { Usage } from './usage';
-import { Docs } from './docs';
 
 const commonConfig = new pulumi.Config('common');
 

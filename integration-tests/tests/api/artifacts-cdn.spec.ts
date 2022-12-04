@@ -1,17 +1,17 @@
 import {
-  S3Client,
-  ListObjectsCommand,
   DeleteObjectsCommand,
   GetObjectCommand,
+  ListObjectsCommand,
+  S3Client,
 } from '@aws-sdk/client-s3';
 import { fetch } from '@whatwg-node/fetch';
 import { authenticate } from '../../testkit/auth';
 import {
+  createCdnAccess,
   createOrganization,
   createProject,
   createToken,
   publishSchema,
-  createCdnAccess,
 } from '../../testkit/flow';
 import { ProjectType, TargetAccessScope } from '../../testkit/gql/graphql';
 

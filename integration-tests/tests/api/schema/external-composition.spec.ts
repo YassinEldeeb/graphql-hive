@@ -1,13 +1,13 @@
-import { TargetAccessScope, ProjectType, ProjectAccessScope } from '@app/gql/graphql';
+import { ProjectAccessScope, ProjectType, TargetAccessScope } from '@app/gql/graphql';
+import { authenticate } from '../../../testkit/auth';
+import { dockerAddress, history } from '../../../testkit/external-composition';
 import {
   createOrganization,
-  publishSchema,
   createProject,
   createToken,
   enableExternalSchemaComposition,
+  publishSchema,
 } from '../../../testkit/flow';
-import { history, dockerAddress } from '../../../testkit/external-composition';
-import { authenticate } from '../../../testkit/auth';
 
 test('call an external service to compose and validate services', async () => {
   const { access_token: owner_access_token } = await authenticate('main');

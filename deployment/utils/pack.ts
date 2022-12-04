@@ -1,6 +1,6 @@
+import { execSync } from 'child_process';
 import { resolve } from 'path';
 import { getPackagesSync } from '@manypkg/get-packages';
-import { execSync } from 'child_process';
 
 export function createPackageHelper(dir = resolve(process.cwd(), '../')) {
   const { packages } = getPackagesSync(dir);

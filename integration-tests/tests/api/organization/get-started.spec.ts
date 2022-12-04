@@ -1,23 +1,23 @@
 import {
+  OrganizationAccessScope,
+  ProjectAccessScope,
+  ProjectType,
+  TargetAccessScope,
+} from '@app/gql/graphql';
+import { authenticate } from '../../../testkit/auth';
+import {
+  checkSchema,
   createOrganization,
-  getOrganization,
   createProject,
   createToken,
-  publishSchema,
-  checkSchema,
-  joinOrganization,
+  getOrganization,
   inviteToOrganization,
-  waitFor,
+  joinOrganization,
+  publishSchema,
   setTargetValidation,
+  waitFor,
 } from '../../../testkit/flow';
-import { authenticate } from '../../../testkit/auth';
 import { collect } from '../../../testkit/usage';
-import {
-  TargetAccessScope,
-  ProjectType,
-  ProjectAccessScope,
-  OrganizationAccessScope,
-} from '@app/gql/graphql';
 
 async function getSteps({ organization, token }: { organization: string; token: string }) {
   const result = await getOrganization(organization, token);

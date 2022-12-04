@@ -1,12 +1,12 @@
 import { OrganizationAccessScope, ProjectAccessScope, TargetAccessScope } from '@app/gql/graphql';
+import { authenticate } from '../../../testkit/auth';
+import { history } from '../../../testkit/emails';
 import {
   createOrganization,
   inviteToOrganization,
   joinOrganization,
   updateMemberAccess,
 } from '../../../testkit/flow';
-import { authenticate } from '../../../testkit/auth';
-import { history } from '../../../testkit/emails';
 
 test('owner of an organization should have all scopes', async () => {
   const { access_token } = await authenticate('main');
