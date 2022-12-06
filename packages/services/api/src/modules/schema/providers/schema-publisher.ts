@@ -167,7 +167,7 @@ export class SchemaPublisher {
         }
 
         await this.gitHubIntegrationManager.createCheckRun({
-          name: 'GraphQL Hive - schema:check',
+          name: 'GraphQL Hive - schema:check' + input.service ? `: ${input.service}` : '',
           conclusion: validationResult.valid ? 'success' : 'failure',
           sha: input.github.commit,
           organization: input.organization,
