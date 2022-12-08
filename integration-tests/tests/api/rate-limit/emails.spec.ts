@@ -12,7 +12,7 @@ import {
   waitFor,
 } from '../../../testkit/flow';
 import * as emails from '../../../testkit/emails';
-import { authenticate, userEmails } from '../../../testkit/auth';
+import { authenticate, userEmail } from '../../../testkit/auth';
 import { collect } from '../../../testkit/usage';
 
 function generateUnique() {
@@ -29,7 +29,7 @@ function filterEmailsByOrg(orgName: string, emails: emails.Email[]) {
 }
 
 test('rate limit approaching and reached for organization', async () => {
-  const adminEmail = userEmails.admin;
+  const adminEmail = userEmail('admin');
   const { access_token } = await authenticate('admin');
   const orgResult = await createOrganization(
     {
@@ -90,7 +90,7 @@ test('rate limit approaching and reached for organization', async () => {
     fields: ['Query', 'Query.ping'],
     execution: {
       ok: true,
-      duration: 200000000,
+      duration: 200_000_000,
       errorsTotal: 0,
     },
   };
@@ -102,7 +102,7 @@ test('rate limit approaching and reached for organization', async () => {
 
   expect(collectResult.status).toEqual(200);
 
-  await waitFor(5_000);
+  await waitFor(5000);
 
   let sent = await emails.history();
   expect(sent).toContainEqual({
@@ -117,7 +117,7 @@ test('rate limit approaching and reached for organization', async () => {
     token,
   });
 
-  await waitFor(5_000);
+  await waitFor(5000);
 
   sent = await emails.history();
 
@@ -134,7 +134,7 @@ test('rate limit approaching and reached for organization', async () => {
     token,
   });
 
-  await waitFor(5_000);
+  await waitFor(5000);
 
   // Nothing new
   sent = await emails.history();
