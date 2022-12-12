@@ -36,7 +36,6 @@ CREATE TABLE public.schema_versions (
 );
 
 -- Describes the relationship between a schema version and the actions that were performed previously but are related to the matching schema version.
--- It does not hold a reference to the current action, as it is already referenced by the schema version.
 CREATE TABLE public.schema_version_to_log (
   version_id uuid NOT NULL REFERENCES public.schema_versions(id) ON DELETE CASCADE,
   action_id uuid NOT NULL REFERENCES public.schema_log(id) ON DELETE CASCADE,
