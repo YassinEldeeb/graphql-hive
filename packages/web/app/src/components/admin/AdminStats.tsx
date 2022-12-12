@@ -18,15 +18,14 @@ import {
 import ReactECharts from 'echarts-for-react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {
-  createTable,
-  useTableInstance,
+  useReactTable,
   getCoreRowModel,
   getSortedRowModel,
   getPaginationRowModel,
   SortingState,
   PaginationState,
-  TableInstance as OriginalTableInstance,
-  Table as OriginalTable,
+  flexRender,
+  Row,
 } from '@tanstack/react-table';
 import { DocumentType, gql, useQuery } from 'urql';
 import { formatISO } from 'date-fns';
@@ -47,10 +46,6 @@ interface Organization {
   persistedOperations: number;
   operations: any;
 }
-
-const table = createTable().setRowType<Organization>();
-
-type TableInstance = typeof table extends OriginalTable<infer T> ? OriginalTableInstance<T> : never;
 
 function formatNumber(value: number) {
   return Intl.NumberFormat().format(value);
@@ -247,7 +242,7 @@ function filterStats(
   return true;
 }
 
-function OrganizationTableRow({ row }: { row: ReturnType<TableInstance['getRow']> }) {
+function OrganizationTableRow({ row }: { row: Row<Organization> }) {
   return (
     <Tr key={row.id}>
       {row.getVisibleCells().map(cell => {
@@ -264,7 +259,7 @@ function OrganizationTableRow({ row }: { row: ReturnType<TableInstance['getRow']
               ? formatNumber(cell.getValue() as number)
               : isReact
               ? cell.getValue()
-              : cell.renderCell()}
+              : cell.renderValue()}
           </Td>
         );
       })}
@@ -273,76 +268,89 @@ function OrganizationTableRow({ row }: { row: ReturnType<TableInstance['getRow']
 }
 
 function OrganizationTable({ data }: { data: Organization[] }) {
-  const columns = React.useMemo(
-    () => [
-      table.createDataColumn('name', {
-        header: 'Organization',
-        footer: props => props.column.id,
-        enableSorting: false,
-      }),
-      table.createDataColumn('type', {
-        header: 'Type',
-        footer: props => props.column.id,
-      }),
-      table.createDataColumn('members', {
-        header: 'Members',
-        footer: props => props.column.id,
-        meta: {
-          align: 'right',
-        },
-      }),
-      table.createDataColumn('users', {
-        header: 'Users',
-        footer: props => props.column.id,
-      }),
-      table.createDataColumn('projects', {
-        header: 'Projects',
-        footer: props => props.column.id,
-        meta: {
-          align: 'right',
-        },
-      }),
-      table.createDataColumn('targets', {
-        header: 'Targets',
-        footer: props => props.column.id,
-        meta: {
-          align: 'right',
-        },
-      }),
-      table.createDataColumn('versions', {
-        header: 'Schema pushes',
-        footer: props => props.column.id,
-        meta: {
-          align: 'right',
-        },
-      }),
-      table.createDataColumn('persistedOperations', {
-        header: 'Persisted Ops',
-        footer: props => props.column.id,
-        meta: {
-          align: 'right',
-        },
-      }),
-      table.createDataColumn('operations', {
-        header: 'Collected Ops',
-        footer: props => props.column.id,
-        meta: {
-          align: 'right',
-        },
-      }),
-    ],
-    [],
-  );
-
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 20,
   });
 
-  const tableInstance = useTableInstance(table, {
+  const tableInstance = useReactTable({
     data,
-    columns,
+    columns: [
+      {
+        id: 'name',
+        accessorKey: 'name',
+        header: 'Organization',
+        footer: props => props.column.id,
+        enableSorting: false,
+      },
+      {
+        id: 'type',
+        accessorKey: 'type',
+        header: 'Type',
+        footer: props => props.column.id,
+      },
+      {
+        id: 'members',
+        accessorKey: 'members',
+        header: 'Members',
+        footer: props => props.column.id,
+        meta: {
+          align: 'right',
+        },
+      },
+      {
+        id: 'users',
+        accessorKey: 'users',
+        header: 'Users',
+        footer: props => props.column.id,
+      },
+      {
+        id: 'projects',
+        accessorKey: 'projects',
+        header: 'Projects',
+        footer: props => props.column.id,
+        meta: {
+          align: 'right',
+        },
+      },
+      {
+        id: 'targets',
+        accessorKey: 'targets',
+        header: 'Targets',
+        footer: props => props.column.id,
+        meta: {
+          align: 'right',
+        },
+      },
+      {
+        id: 'versions',
+        accessorKey: 'versions',
+        header: 'Schema pushes',
+        footer: props => props.column.id,
+        meta: {
+          align: 'right',
+        },
+      },
+      {
+        id: 'persistedOperations',
+        accessorKey: 'persistedOperations',
+        header: 'Persisted Ops',
+        footer: props => props.column.id,
+        meta: {
+          align: 'right',
+        },
+      },
+      {
+        id: 'operations',
+        accessorKey: 'operations',
+        header: 'Collected Ops',
+        footer: props => props.column.id,
+        meta: {
+          align: 'right',
+        },
+      },
+    ],
     state: {
       sorting,
       pagination,
@@ -386,7 +394,7 @@ function OrganizationTable({ data }: { data: Organization[] }) {
                     isSorted={header.column.getIsSorted() !== false}
                     isSortedDesc={header.column.getIsSorted() === 'desc'}
                   >
-                    {header.renderHeader()}
+                    {flexRender(header.column.columnDef.header, header.getContext())}
                   </Sortable>
                 </Th>
               );

@@ -30,8 +30,7 @@ import {
   VscWarning,
 } from 'react-icons/vsc';
 import {
-  createTable,
-  useTableInstance,
+  useReactTable,
   getCoreRowModel,
   getSortedRowModel,
   getPaginationRowModel,
@@ -157,41 +156,6 @@ const OperationRow: React.FC<{
   );
 };
 
-const table = createTable().setRowType<Operation>();
-
-const columns = [
-  table.createDataColumn('name', {
-    header: 'Operations',
-  }),
-  table.createDataColumn('kind', {
-    header: 'Kind',
-  }),
-  table.createDataColumn('p90', {
-    header: 'p90',
-    footer: props => props.column.id,
-  }),
-  table.createDataColumn('p95', {
-    header: 'p95',
-    footer: props => props.column.id,
-  }),
-  table.createDataColumn('p99', {
-    header: 'p99',
-    footer: props => props.column.id,
-  }),
-  table.createDataColumn('failureRate', {
-    header: 'Failure Rate',
-    footer: props => props.column.id,
-  }),
-  table.createDataColumn('requests', {
-    header: 'Requests',
-    footer: props => props.column.id,
-  }),
-  table.createDataColumn('percentage', {
-    header: 'Traffic',
-    footer: props => props.column.id,
-  }),
-];
-
 type SetPaginationFn = (updater: React.SetStateAction<PaginationState>) => void;
 
 const OperationsTable: React.FC<{
@@ -202,8 +166,55 @@ const OperationsTable: React.FC<{
   setSorting: OnChangeFn<SortingState>;
   className?: string;
 }> = ({ operations, sorting, setSorting, pagination, setPagination, className }) => {
-  const tableInstance = useTableInstance(table, {
-    columns,
+  const tableInstance = useReactTable({
+    columns: [
+      {
+        id: 'name',
+        accessorKey: 'name',
+        header: 'Operations',
+      },
+      {
+        id: 'kind',
+        accessorKey: 'kind',
+        header: 'Kind',
+      },
+      {
+        id: 'p90',
+        accessorKey: 'p90',
+        header: 'p90',
+        footer: props => props.column.id,
+      },
+      {
+        id: 'p95',
+        accessorKey: 'p95',
+        header: 'p95',
+        footer: props => props.column.id,
+      },
+      {
+        id: 'p99',
+        accessorKey: 'p99',
+        header: 'p99',
+        footer: props => props.column.id,
+      },
+      {
+        id: 'failureRate',
+        accessorKey: 'failureRate',
+        header: 'Failure Rate',
+        footer: props => props.column.id,
+      },
+      {
+        id: 'requests',
+        accessorKey: 'requests',
+        header: 'Requests',
+        footer: props => props.column.id,
+      },
+      {
+        id: 'percentage',
+        accessorKey: 'percentage',
+        header: 'Traffic',
+        footer: props => props.column.id,
+      },
+    ],
     data: operations,
     state: {
       sorting,
@@ -230,8 +241,14 @@ const OperationsTable: React.FC<{
 
   const headerGroup = tableInstance.getHeaderGroups()[0];
 
-  function findColumn(key: string) {
-    return headerGroup.headers[columns.findIndex(c => c.accessorKey === key)];
+  function findColumn(key: string | number) {
+    const col = headerGroup.headers.find(h => h.column.id === key);
+
+    if (!col) {
+      throw new Error(`Column "${key}" not found`);
+    }
+
+    return col;
   }
 
   const p90Column = findColumn('p90');
