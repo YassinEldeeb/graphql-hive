@@ -2,12 +2,15 @@
   "name": "@hive/app",
   "version": "0.0.0",
   "private": true,
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "analyze": "pnpm build:config && ANALYZE=1 next build",
     "build": "pnpm build:config && BUILD=1 bob runify --single",
     "build:config": "tsup-node --no-splitting --out-dir . --loader \".mts=ts\" --format esm --target node16 next.config.mts",
     "dev": "pnpm build:config && next dev",
-    "postbuild": "pnpm --filter @hive/app deploy dist/deploy && rimraf dist/node_modules && mv dist/deploy/node_modules dist && rimraf dist/deploy",
+    "postbuild": "pnpm --filter @hive/app deploy packages/web/app/dist",
     "start": "node dist/index.js",
     "typecheck": "tsc"
   },
@@ -64,7 +67,7 @@
     "js-cookie": "3.0.1",
     "monaco-editor": "0.27.0",
     "monaco-themes": "0.3.3",
-    "next": "13.0.5",
+    "next": "13.0.7",
     "nextjs-cors": "2.1.2",
     "node-crisp-api": "1.12.3",
     "react": "18.2.0",
@@ -88,7 +91,7 @@
     "valtio": "1.2.5",
     "wonka": "4.0.15",
     "yup": "0.32.11",
-    "zod": "3.15.1"
+    "zod": "3.20.2"
   },
   "devDependencies": {
     "@graphql-codegen/gql-tag-operations-preset": "1.7.0",

@@ -24,6 +24,7 @@
     "build:local": "pnpm graphql:generate && pnpm turbo build-local --color",
     "build:services": "pnpm graphql:generate && pnpm turbo build  --filter=./packages/services/**/* --color",
     "build:web": "pnpm graphql:generate && pnpm turbo build --filter=./packages/web/* --color",
+    "build:workers": "pnpm turbo build --filter=./packages/services/cdn-worker --filter=./packages/services/broker-worker --filter=./packages/services/police-worker --color",
     "docker:build": "docker buildx bake -f docker.hcl --load build",
     "env:sync": "node ./scripts/sync-env-files.js",
     "generate": "pnpm --filter @hive/storage db:generate && pnpm graphql:generate",

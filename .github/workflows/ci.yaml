@@ -43,7 +43,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
-          version: 7
+          version: 7.18.2
 
       - name: Install Node
         uses: actions/setup-node@v3
@@ -103,7 +103,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
-          version: 7
+          version: 7.18.2
 
       - name: Install Node
         uses: actions/setup-node@v3
@@ -151,7 +151,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
-          version: 7
+          version: 7.18.2
 
       - name: Install Node
         uses: actions/setup-node@v3
@@ -186,12 +186,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 5
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
-          version: 7
+          version: 7.18.2
 
       - name: Install Node
         uses: actions/setup-node@v3
@@ -219,6 +220,9 @@ jobs:
       - name: Archive @hive/app
         run: zip -r packages/web/app/dist.zip packages/web/app/dist
 
+      - name: Archive @hive/docs
+        run: zip -r packages/web/docs/dist.zip packages/web/docs/dist
+
       - uses: actions/upload-artifact@v3
         name: Upload Docker Build Artifacts
         if: ${{ !github.event.pull_request.head.repo.fork }}
@@ -241,6 +245,7 @@ jobs:
             packages/services/webhooks/dist
             packages/services/external-composition/federation-2/dist
             packages/web/app/dist.zip
+            packages/web/docs/dist.zip
 
   rust:
     name: Build Rust
@@ -256,7 +261,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
-          version: 7
+          version: 7.18.2
 
       - name: Install Node
         uses: actions/setup-node@v3
@@ -315,7 +320,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
-          version: 7
+          version: 7.18.2
 
       - name: Install Node
         uses: actions/setup-node@v3
@@ -369,6 +374,12 @@ jobs:
       packages: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
       - uses: actions/download-artifact@v3
         with:
           name: docker-build-sources
@@ -376,6 +387,9 @@ jobs:
 
       - name: Unarchive @hive/app
         run: unzip packages/web/app/dist.zip
+
+      - name: Unarchive @hive/docs
+        run: unzip packages/web/docs/dist.zip
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -406,8 +420,8 @@ jobs:
       - name: Build Docker Images
         env:
           DOCKER_REGISTRY: ${{ env.REGISTRY }}/${{ github.repository }}/
-          COMMIT_SHA: ${{ github.sha }}
-          RELEASE: ${{ github.sha }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+          RELEASE: ${{ github.event.pull_request.head.sha }}
           BRANCH_NAME: ${{ steps.branch_name_fix.outputs.replaced }}
           BUILD_TYPE: 'publish'
         run: |
@@ -427,7 +441,7 @@ jobs:
       TURBO_API_URL: ${{ secrets.TURBO_API_URL }}
       TURBO_REMOTE_ONLY: 'true'
       DOCKER_REGISTRY: ghcr.io/${{ github.repository }}/
-      DOCKER_TAG: :${{ github.sha }}
+      DOCKER_TAG: :${{ github.event.pull_request.head.sha }}
 
     steps:
       - name: Check out repository code
@@ -438,7 +452,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
-          version: 7
+          version: 7.18.2
 
       - name: Install Node
         uses: actions/setup-node@v3
@@ -454,11 +468,11 @@ jobs:
       - name: Setup Turbo
         run: node ./scripts/turborepo-setup.js
 
-      - name: Build
+      - name: Build and Pack
         run: pnpm --filter integration-tests build-and-pack
 
-      - name: Build
-        run: pnpm turbo build --filter=./packages/web/app --color
+      - name: Build App and Docs
+        run: pnpm turbo build --filter=./packages/web/app --filter=./packages/web/docs --color
 
       - name: Pull images
         run: |
@@ -480,8 +494,8 @@ jobs:
 
       - name: Build Docker Images
         env:
-          COMMIT_SHA: ${{ github.sha }}
-          RELEASE: ${{ github.sha }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+          RELEASE: ${{ github.event.pull_request.head.sha }}
           BUILD_TYPE: 'ci'
         run: |
           docker buildx bake \
@@ -515,7 +529,7 @@ jobs:
       TURBO_API_URL: ${{ secrets.TURBO_API_URL }}
       TURBO_REMOTE_ONLY: 'true'
       DOCKER_REGISTRY: ghcr.io/${{ github.repository }}/
-      DOCKER_TAG: :${{ github.sha }}
+      DOCKER_TAG: :${{ github.event.pull_request.head.sha }}
       # Feature Flags
       FF_CLICKHOUSE_V2_TABLES: '1'
 
@@ -538,7 +552,7 @@ jobs:
         if: steps.feature_flags.outputs.detected == 'true'
         uses: pnpm/action-setup@v2.2.4
         with:
-          version: 7
+          version: 7.18.2
 
       - name: Install Node
         if: steps.feature_flags.outputs.detected == 'true'
@@ -563,7 +577,7 @@ jobs:
 
       - name: Build
         if: steps.feature_flags.outputs.detected == 'true'
-        run: pnpm turbo build --filter=./packages/web/app --color
+        run: pnpm turbo build --filter=./packages/web/app --filter=./packages/web/docs --color
 
       - name: Pull images
         if: steps.feature_flags.outputs.detected == 'true'
@@ -583,8 +597,8 @@ jobs:
 
       - name: Build Docker Images
         env:
-          COMMIT_SHA: ${{ github.sha }}
-          RELEASE: ${{ github.sha }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+          RELEASE: ${{ github.event.pull_request.head.sha }}
           BUILD_TYPE: 'ci'
         run: |
           docker buildx bake \
@@ -610,6 +624,7 @@ jobs:
   e2e-tests:
     name: E2E Tests
     runs-on: ubuntu-latest
+    needs: docker-build-push
     timeout-minutes: 20
 
     env:
@@ -636,7 +651,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 7
+          version: 7.18.2
 
       - name: Set up Node
         uses: actions/setup-node@v3
@@ -645,38 +660,20 @@ jobs:
           # TODO: cypress binary in pnpm store gets lost during caching :)
           # cache: pnpm
 
-      - name: Set Cypress cache folder
-        run: echo "CYPRESS_CACHE_FOLDER=$(pnpm store path)/Cypress" >> $GITHUB_ENV
+      - name: Pull node_modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ github.sha }}
 
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
 
-      - name: Turbo Cache
-        id: turbo-cache
-        uses: actions/cache@v3
-        with:
-          path: node_modules/.cache/turbo
-          key: turbo-cache-${{ github.sha }}
-          restore-keys: |
-            turbo-cache-
-
-      - name: Build
-        run: pnpm build
+      - name: Set Cypress cache folder
+        run: echo "CYPRESS_CACHE_FOLDER=$(pnpm store path)/Cypress" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-
-      - name: Bake
-        uses: docker/bake-action@v2
-        env:
-          PWD: ${{ github.workspace }}
-        with:
-          files: docker.hcl
-          load: true
-          targets: build
-          set: |
-            *.cache-from=type=gha
-            *.cache-to=type=gha,mode=max
 
       # TODO: mounting volumes in the CI causes permission problems for services
       - name: Remove volume mounts from compose file
@@ -686,7 +683,16 @@ jobs:
 
       - name: Up
         timeout-minutes: 5
+        env:
+          DOCKER_REGISTRY: ghcr.io/${{ github.repository }}/
+          DOCKER_TAG: :${{ github.event.pull_request.head.sha }}
         run: docker compose -f docker-compose.community.yml up -d --wait
+
+      - name: Troubleshoot Containers
+        if: ${{ failure() }}
+        run: |
+          docker compose -f docker-compose.community.yml ps
+          docker compose -f docker-compose.community.yml logs
 
       - name: Cypress run
         uses: cypress-io/github-action@v4
