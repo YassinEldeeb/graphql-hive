@@ -219,6 +219,9 @@ jobs:
       - name: Archive @hive/app
         run: zip -r packages/web/app/dist.zip packages/web/app/dist
 
+      - name: Archive @hive/docs
+        run: zip -r packages/web/docs/dist.zip packages/web/docs/dist
+
       - uses: actions/upload-artifact@v3
         name: Upload Docker Build Artifacts
         if: ${{ !github.event.pull_request.head.repo.fork }}
@@ -241,6 +244,7 @@ jobs:
             packages/services/webhooks/dist
             packages/services/external-composition/federation-2/dist
             packages/web/app/dist.zip
+            packages/web/docs/dist.zip
 
   rust:
     name: Build Rust
@@ -377,6 +381,9 @@ jobs:
       - name: Unarchive @hive/app
         run: unzip packages/web/app/dist.zip
 
+      - name: Unarchive @hive/docs
+        run: unzip packages/web/docs/dist.zip
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -454,11 +461,11 @@ jobs:
       - name: Setup Turbo
         run: node ./scripts/turborepo-setup.js
 
-      - name: Build
+      - name: Build and Pack
         run: pnpm --filter integration-tests build-and-pack
 
-      - name: Build
-        run: pnpm turbo build --filter=./packages/web/app --color
+      - name: Build App and Docs
+        run: pnpm turbo build --filter=./packages/web/app --filter=./packages/web/docs --color
 
       - name: Pull images
         run: |
@@ -563,7 +570,7 @@ jobs:
 
       - name: Build
         if: steps.feature_flags.outputs.detected == 'true'
-        run: pnpm turbo build --filter=./packages/web/app --color
+        run: pnpm turbo build --filter=./packages/web/app --filter=./packages/web/docs --color
 
       - name: Pull images
         if: steps.feature_flags.outputs.detected == 'true'
