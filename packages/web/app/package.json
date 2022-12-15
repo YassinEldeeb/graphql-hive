@@ -7,7 +7,7 @@
     "build": "pnpm build:config && BUILD=1 bob runify --single",
     "build:config": "tsup-node --no-splitting --out-dir . --loader \".mts=ts\" --format esm --target node16 next.config.mts",
     "dev": "pnpm build:config && next dev",
-    "postbuild": "pnpm --filter @hive/app deploy dist/deploy && rimraf dist/node_modules && mv dist/deploy/node_modules dist && rimraf dist/deploy",
+    "postbuild": "pnpm --filter @hive/app deploy packages/web/app/dist",
     "start": "node dist/index.js",
     "typecheck": "tsc"
   },
