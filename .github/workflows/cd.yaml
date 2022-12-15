@@ -442,3 +442,12 @@ jobs:
           docker buildx bake \
             -f docker.hcl \
             build --push
+
+      - name: 'Upload source maps to Sentry'
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_ORG: the-guild-z4
+          SENTRY_PROJECT: graphql-hive
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_RELEASE: ${{ github.sha }}
+        run: pnpm upload-sourcemaps || echo "Failed to upload sourcemaps"
