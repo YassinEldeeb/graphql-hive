@@ -279,8 +279,9 @@ target "composition-federation-2" {
 
 target "app" {
   inherits = ["app-base", get_target()]
-  context = "${PWD}/packages/web/app/dist"
+  context = "${PWD}/packages/web/app/.next/standalone"
   args = {
+    PACKAGE_DIR = "app"
     IMAGE_TITLE = "graphql-hive/app"
     PORT = "3000"
     IMAGE_DESCRIPTION = "The app of the GraphQL Hive project."
@@ -295,8 +296,9 @@ target "app" {
 
 target "docs" {
   inherits = ["app-base", get_target()]
-  context = "${PWD}/packages/web/docs/dist"
+  context = "${PWD}/packages/web/docs/.next/standalone"
   args = {
+    PACKAGE_DIR = "docs"
     IMAGE_TITLE = "graphql-hive/docs"
     PORT = "3000"
     IMAGE_DESCRIPTION = "The docs of the GraphQL Hive project."

@@ -218,10 +218,10 @@ jobs:
         run: pnpm turbo check:build
 
       - name: Archive @hive/app
-        run: zip -r packages/web/app/dist.zip packages/web/app/dist
+        run: zip -r packages/web/app/standalone.zip packages/web/app/.next/standalone
 
       - name: Archive @hive/docs
-        run: zip -r packages/web/docs/dist.zip packages/web/docs/dist
+        run: zip -r packages/web/docs/standalone.zip packages/web/docs/.next/standalone
 
       - uses: actions/upload-artifact@v3
         name: Upload Docker Build Artifacts
@@ -244,8 +244,8 @@ jobs:
             packages/services/usage/dist
             packages/services/webhooks/dist
             packages/services/external-composition/federation-2/dist
-            packages/web/app/dist.zip
-            packages/web/docs/dist.zip
+            packages/web/app/standalone.zip
+            packages/web/docs/standalone.zip
 
   rust:
     name: Build Rust
@@ -386,10 +386,10 @@ jobs:
           path: ./
 
       - name: Unarchive @hive/app
-        run: unzip packages/web/app/dist.zip
+        run: unzip packages/web/app/standalone.zip
 
       - name: Unarchive @hive/docs
-        run: unzip packages/web/docs/dist.zip
+        run: unzip packages/web/docs/standalone.zip
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2

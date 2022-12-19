@@ -1,5 +1,11 @@
 FROM node:16-slim
 
+ARG IMAGE_TITLE=""
+ARG IMAGE_DESCRIPTION=""
+ARG RELEASE=""
+ARG PORT=""
+ARG HEALTHCHECK_CMD=""
+
 RUN apt-get update && apt-get install -y \
   wget \
   && rm -rf /var/lib/apt/lists/*

@@ -1,10 +1,16 @@
 FROM node:16-slim
 
+ARG PACKAGE_DIR=""
+ARG IMAGE_TITLE=""
+ARG IMAGE_DESCRIPTION=""
+ARG RELEASE=""
+ARG PORT=""
+
 ENV NODE_ENV production
 
 WORKDIR /usr/src/app
 
-# context packages/web/app/dist
+# context packages/web/app/.next/standalone
 COPY . /usr/src/app/
 
 LABEL org.opencontainers.image.title=$IMAGE_TITLE
@@ -18,4 +24,6 @@ ENV ENVIRONMENT production
 ENV RELEASE $RELEASE
 ENV PORT $PORT
 
-CMD ["node", "index.js"]
+WORKDIR /usr/src/app/packages/web/$PACKAGE_DIR
+
+CMD ["node", "server.js"]
