@@ -53,7 +53,11 @@ export class TargetManager {
 
     let cleanId = paramCase(name);
 
-    if (await this.storage.getTargetByCleanId({ cleanId, project, organization })) {
+    if (
+      // packages/web/app uses the "view" prefix, let's avoid the collision
+      name.toLowerCase() === 'view' ||
+      (await this.storage.getTargetByCleanId({ cleanId, project, organization }))
+    ) {
       cleanId = paramCase(`${name}-${uuid(4)}`);
     }
 
@@ -91,19 +95,12 @@ export class TargetManager {
       scope: TargetAccessScope.DELETE,
     });
 
-    // create target
-    const [result] = await Promise.all([
-      this.storage.deleteTarget({
-        target,
-        project,
-        organization,
-      }),
-      this.tokenStorage.invalidateTarget({
-        target,
-        project,
-        organization,
-      }),
-    ]);
+    const deletedTarget = await this.storage.deleteTarget({
+      target,
+      project,
+      organization,
+    });
+    await this.tokenStorage.invalidateTokens(deletedTarget.tokens);
 
     await this.activityManager.create({
       type: 'TARGET_DELETED',
@@ -112,12 +109,12 @@ export class TargetManager {
         project,
       },
       meta: {
-        name: result.name,
-        cleanId: result.cleanId,
+        name: deletedTarget.name,
+        cleanId: deletedTarget.cleanId,
       },
     });
 
-    return result;
+    return deletedTarget;
   }
 
   async getTargets(selector: ProjectSelector): Promise<readonly Target[]> {

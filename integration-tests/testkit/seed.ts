@@ -1,9 +1,9 @@
-import { gql } from '@app/gql';
 import {
   OrganizationAccessScope,
   OrganizationType,
   ProjectAccessScope,
   ProjectType,
+  RegistryModel,
   TargetAccessScope,
 } from '@app/gql/graphql';
 import { authenticate, userEmail } from './auth';
@@ -13,6 +13,7 @@ import {
   createOrganization,
   createProject,
   createToken,
+  deleteSchema,
   deleteTokens,
   fetchLatestSchema,
   fetchLatestValidSchema,
@@ -25,14 +26,16 @@ import {
   inviteToOrganization,
   joinOrganization,
   publishSchema,
+  readOperationBody,
   readOperationsStats,
   readTokenInfo,
-  schemaSyncCDN,
   setTargetValidation,
   updateBaseSchema,
   updateMemberAccess,
+  updateRegistryModel,
   updateSchemaVersionStatus,
 } from './flow';
+import { graphql } from './gql';
 import { execute } from './graphql';
 import { collect, CollectedOperation } from './usage';
 import { generateUnique } from './utils';
@@ -50,7 +53,7 @@ export function initSeed() {
         ownerToken,
         async createPersonalProject(projectType: ProjectType) {
           const orgs = await execute({
-            document: gql(/* GraphQL */ `
+            document: graphql(/* GraphQL */ `
               query myOrganizations {
                 organizations {
                   total
@@ -136,7 +139,13 @@ export function initSeed() {
 
               return members;
             },
-            async createProject(projectType: ProjectType) {
+            async createProject(
+              projectType: ProjectType,
+              options?: {
+                useLegacyRegistryModels?: boolean;
+              },
+            ) {
+              const useLegacyRegistryModels = options?.useLegacyRegistryModels === true;
               const projectResult = await createProject(
                 {
                   organization: organization.cleanId,
@@ -149,6 +158,17 @@ export function initSeed() {
               const targets = projectResult.createProject.ok!.createdTargets;
               const target = targets[0];
               const project = projectResult.createProject.ok!.createdProject;
+
+              if (useLegacyRegistryModels) {
+                await updateRegistryModel(
+                  {
+                    organization: organization.cleanId,
+                    project: projectResult.createProject.ok!.createdProject.cleanId,
+                    model: RegistryModel.Legacy,
+                  },
+                  ownerToken,
+                ).then(r => r.expectNoGraphQLErrors());
+              }
 
               return {
                 project,
@@ -199,6 +219,19 @@ export function initSeed() {
                   return {
                     token,
                     secret,
+                    async readOperationBody(hash: string) {
+                      const operationBodyResult = await readOperationBody(
+                        {
+                          organization: organization.cleanId,
+                          project: project.cleanId,
+                          target: target.cleanId,
+                          hash,
+                        },
+                        secret,
+                      ).then(r => r.expectNoGraphQLErrors());
+
+                      return operationBodyResult.operationBodyByHash;
+                    },
                     async readOperationsStats(from: string, to: string) {
                       const statsResult = await readOperationsStats(
                         {
@@ -225,10 +258,11 @@ export function initSeed() {
                         authorizationHeader: headerName,
                       });
                     },
-                    async checkSchema(sdl: string) {
+                    async checkSchema(sdl: string, service?: string) {
                       return await checkSchema(
                         {
                           sdl,
+                          service,
                         },
                         secret,
                       );
@@ -290,7 +324,9 @@ export function initSeed() {
                         secret,
                       ).then(r => r.expectNoGraphQLErrors());
 
-                      return result.createCdnToken;
+                      expect(result.createCdnAccessToken.ok).not.toBeNull();
+
+                      return result.createCdnAccessToken.ok!;
                     },
                     async publishSchema(options: {
                       sdl: string;
@@ -319,6 +355,15 @@ export function initSeed() {
                         options.headerName || 'authorization',
                       );
                     },
+                    async deleteSchema(serviceName: string) {
+                      return await deleteSchema(
+                        {
+                          serviceName,
+                          dryRun: false,
+                        },
+                        secret,
+                      );
+                    },
                     async latestSchema() {
                       return (await fetchLatestSchema(secret)).expectNoGraphQLErrors();
                     },
@@ -338,16 +383,6 @@ export function initSeed() {
 
                       return result.updateBaseSchema;
                     },
-                    async schemaSyncCDN() {
-                      return await schemaSyncCDN(
-                        {
-                          organization: organization.cleanId,
-                          project: project.cleanId,
-                          target: target.cleanId,
-                        },
-                        secret,
-                      ).then(r => r.expectNoGraphQLErrors());
-                    },
                     async fetchVersions(count: number) {
                       const result = await fetchVersions(
                         {
@@ -362,7 +397,7 @@ export function initSeed() {
                       return result.schemaVersions.nodes;
                     },
                     async fetchTokenInfo() {
-                      const tokenInfoResult = await readTokenInfo(secret!).then(r =>
+                      const tokenInfoResult = await readTokenInfo(secret).then(r =>
                         r.expectNoGraphQLErrors(),
                       );
 

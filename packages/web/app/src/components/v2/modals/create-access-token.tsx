@@ -1,5 +1,4 @@
 import { ReactElement } from 'react';
-import { Accordion } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Yup from 'yup';
@@ -8,6 +7,7 @@ import { Button, CopyValue, Heading, Input, Modal, Tag } from '@/components/v2';
 import { OrganizationDocument, OrganizationQuery } from '@/graphql';
 import { scopes } from '@/lib/access/common';
 import { useRouteSelector } from '@/lib/hooks';
+import { Accordion } from '@chakra-ui/react';
 
 const CreateAccessToken_CreateTokenMutation = gql(/* GraphQL */ `
   mutation CreateAccessToken_CreateToken($input: CreateTokenInput!) {
@@ -158,14 +158,14 @@ const ModalContent = (props: {
               checkAccess={manager.canAccessOrganization}
             />
             <PermissionsSpace
-              title="All Projects"
+              title="Project"
               scopes={scopes.project}
               initialScopes={manager.projectScopes}
               onChange={manager.setProjectScopes}
               checkAccess={manager.canAccessProject}
             />
             <PermissionsSpace
-              title="All targets"
+              title="Target"
               scopes={scopes.target}
               initialScopes={manager.targetScopes}
               onChange={manager.setTargetScopes}

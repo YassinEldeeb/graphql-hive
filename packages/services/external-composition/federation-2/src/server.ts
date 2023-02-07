@@ -1,8 +1,8 @@
+import { parse, printSchema } from 'graphql';
 import { composeServices } from '@apollo/composition';
 import { compose, signatureHeaderName, verifyRequest } from '@graphql-hive/external-composition';
 import { Response } from '@whatwg-node/fetch';
 import { createServerAdapter } from '@whatwg-node/server';
-import { parse, printSchema } from 'graphql';
 import { ResolvedEnv } from './environment';
 
 const composeFederation = compose(services => {
@@ -23,6 +23,7 @@ const composeFederation = compose(services => {
         result: {
           errors: result.errors.map(error => ({
             message: error.message,
+            source: typeof error.extensions?.code === 'string' ? 'composition' : 'graphql',
           })),
         },
       };
@@ -31,7 +32,12 @@ const composeFederation = compose(services => {
       return {
         type: 'failure',
         result: {
-          errors: [{ message: 'supergraphSdl not defined' }],
+          errors: [
+            {
+              message: 'supergraphSdl not defined',
+              source: 'graphql',
+            },
+          ],
         },
       };
     }
@@ -50,6 +56,7 @@ const composeFederation = compose(services => {
         errors: [
           {
             message: (e as Error).message,
+            source: 'graphql',
           },
         ],
       },

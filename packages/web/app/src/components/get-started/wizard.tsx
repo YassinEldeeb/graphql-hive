@@ -1,4 +1,9 @@
 import React from 'react';
+import clsx from 'clsx';
+import { VscIssues, VscPass } from 'react-icons/vsc';
+import { DocumentType, gql } from 'urql';
+import { OrganizationType } from '@/graphql';
+import { getDocsUrl } from '@/lib/docs-url';
 import {
   Drawer,
   DrawerBody,
@@ -8,11 +13,6 @@ import {
   DrawerOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
-import clsx from 'clsx';
-import { VscError, VscIssues } from 'react-icons/vsc';
-import { DocumentType, gql } from 'urql';
-import { OrganizationType } from '@/graphql';
-import { getDocsUrl } from '@/lib/docs-url';
 
 const GetStartedWizard_GetStartedProgress = gql(/* GraphQL */ `
   fragment GetStartedWizard_GetStartedProgress on OrganizationGetStarted {
@@ -168,13 +168,13 @@ function Task({
       rel="noreferrer"
       className={clsx(
         'flex flex-row items-center gap-4 p-3 text-left',
-        completed ? 'opacity-50' : 'hover:opacity-80',
+        completed ? 'opacity-50 line-through' : 'hover:opacity-80',
       )}
     >
       {completed ? (
-        <VscIssues className="h-[20px] w-[20px] text-green-400" />
+        <VscPass className="h-[20px] w-[20px] text-green-400" />
       ) : (
-        <VscError className="h-[20px] w-[20px] text-red-400" />
+        <VscIssues className="h-[20px] w-[20px] text-green-400" />
       )}
       {children}
     </a>

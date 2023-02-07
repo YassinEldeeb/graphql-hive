@@ -32,7 +32,7 @@ export const getActivity = (
   const { __typename: type } = activity;
   const organization = (activity as any).organization;
   const user = (activity as any).user;
-  const projectLink = 'project' in activity && (
+  const projectLink = 'project' in activity && !!activity.project && (
     <Link
       variant="primary"
       href={{
@@ -47,16 +47,17 @@ export const getActivity = (
     </Link>
   );
 
-  const targetHref = 'target' in activity && {
-    pathname: '/[orgId]/[projectId]/[targetId]',
-    query: {
-      orgId: organization.cleanId,
-      projectId: activity.project.cleanId,
-      targetId: activity.target.cleanId,
-    },
-  };
+  const targetHref = 'target' in activity &&
+    !!activity.target && {
+      pathname: '/[orgId]/[projectId]/[targetId]',
+      query: {
+        orgId: organization.cleanId,
+        projectId: activity.project.cleanId,
+        targetId: activity.target.cleanId,
+      },
+    };
 
-  const targetLink = 'target' in activity && (
+  const targetLink = 'target' in activity && !!activity.target && (
     /* TODO: figure out what is going on with targetHref... */
     <Link variant="primary" href={targetHref as any}>
       {activity.target.name}
@@ -242,10 +243,10 @@ export const Activities = (props: React.ComponentProps<'div'>): ReactElement => 
                   <>
                     <div className="self-center p-1">{icon}</div>
                     <div className="grow">
-                      {'project' in activity && (
+                      {'project' in activity && !!activity.project && (
                         <h3 className="mb-1 flex items-center font-medium">
                           <span className="line-clamp-1">{activity.project.name}</span>
-                          {'target' in activity && (
+                          {'target' in activity && !!activity.target && (
                             <>
                               <ArrowDownIcon className="h-4 w-4 shrink-0 -rotate-90 select-none" />
                               <span className="line-clamp-1">{activity.target.name}</span>

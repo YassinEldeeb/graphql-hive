@@ -7,6 +7,7 @@ import { deployCFBroker } from './services/cf-broker';
 import { deployCFCDN } from './services/cf-cdn';
 import { deployClickhouse } from './services/clickhouse';
 import { deployCloudFlareSecurityTransform } from './services/cloudflare-security';
+import { deployDatabaseCleanupJob } from './services/database-cleanup';
 import { deployDbMigrations } from './services/db-migrations';
 import { deployDocs } from './services/docs';
 import { deployEmails } from './services/emails';
@@ -27,6 +28,7 @@ import { deployWebhooks } from './services/webhooks';
 import { DeploymentEnvironment } from './types';
 import { optimizeAzureCluster } from './utils/azure-helpers';
 import { createDockerImageFactory } from './utils/docker-images';
+import { isDefined } from './utils/helpers';
 
 optimizeAzureCluster();
 
@@ -75,6 +77,8 @@ const deploymentEnv: DeploymentEnvironment = {
 deployBotKube({ envName });
 deployMetrics({ envName });
 
+const cdnAuthPrivateKey = commonConfig.requireSecret('cdnAuthPrivateKey');
+
 const cdn = deployCFCDN({
   envName,
   rootDns,
@@ -94,12 +98,22 @@ const redisApi = deployRedis({ deploymentEnv });
 const kafkaApi = deployKafka();
 const clickhouseApi = deployClickhouse();
 
+// eslint-disable-next-line no-process-env
+const shouldCleanDatabase = process.env.CLEAN_DATABASE === 'true';
+const databaseCleanupJob = shouldCleanDatabase ? deployDatabaseCleanupJob({ deploymentEnv }) : null;
+
+// eslint-disable-next-line no-process-env
+const forceRunDbMigrations = process.env.FORCE_DB_MIGRATIONS === 'true';
 const dbMigrations = deployDbMigrations({
   clickhouse: clickhouseApi,
   kafka: kafkaApi,
   deploymentEnv,
   image: dockerImages.getImageId('storage', imagesTag),
   imagePullSecret,
+  force: forceRunDbMigrations,
+  dependencies: [databaseCleanupJob].filter(isDefined),
+  s3: s3Config,
+  cdnAuthPrivateKey,
 });
 
 const tokensApi = deployTokens({
@@ -107,6 +121,7 @@ const tokensApi = deployTokens({
   release: imagesTag,
   deploymentEnv,
   dbMigrations,
+  redis: redisApi,
   heartbeat: heartbeatsConfig.get('tokens'),
   imagePullSecret,
 });
@@ -232,6 +247,7 @@ const graphqlApi = deployGraphQL({
   dbMigrations,
   redis: redisApi,
   usage: usageApi,
+  cdnAuthPrivateKey,
   cdn,
   usageEstimator: usageEstimationApi,
   rateLimit: rateLimitApi,

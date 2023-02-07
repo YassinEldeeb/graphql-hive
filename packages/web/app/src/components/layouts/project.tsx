@@ -1,8 +1,14 @@
-import 'twin.macro';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import NextLink from 'next/link';
+import 'twin.macro';
 import { useQuery } from 'urql';
-import { Button, DropdownMenu, Heading, Link, SubHeader, Tabs } from '@/components/v2';
+import { Button, Heading, Link, SubHeader, Tabs } from '@/components/v2';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/v2/dropdown';
 import { ArrowDownIcon, TargetIcon } from '@/components/v2/icon';
 import { CreateTargetModal } from '@/components/v2/modals';
 import {
@@ -13,6 +19,7 @@ import {
 } from '@/graphql';
 import { canAccessProject, ProjectAccessScope, useProjectAccess } from '@/lib/access/project';
 import { useRouteSelector, useToggle } from '@/lib/hooks';
+import { ProjectMigrationToast } from '../project/migration-toast';
 
 enum TabValue {
   Targets = 'targets',
@@ -98,12 +105,12 @@ export const ProjectLayout = ({
               </Heading>
               {projects && projects.total > 1 && (
                 <DropdownMenu>
-                  <DropdownMenu.Trigger asChild>
+                  <DropdownMenuTrigger asChild>
                     <Button size="small" rotate={180}>
                       <ArrowDownIcon className="h-5 w-5 text-gray-500" />
                     </Button>
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Content sideOffset={5} align="end">
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent sideOffset={5} align="end">
                     {projects.nodes.map(
                       node =>
                         node.cleanId !== projectId && (
@@ -112,11 +119,11 @@ export const ProjectLayout = ({
                             href={`/${orgId}/${node.cleanId}`}
                             className="line-clamp-1 max-w-2xl"
                           >
-                            <DropdownMenu.Item>{node.name}</DropdownMenu.Item>
+                            <DropdownMenuItem>{node.name}</DropdownMenuItem>
                           </NextLink>
                         ),
                     )}
-                  </DropdownMenu.Content>
+                  </DropdownMenuContent>
                 </DropdownMenu>
               )}
             </div>
@@ -135,6 +142,10 @@ export const ProjectLayout = ({
         </div>
       </SubHeader>
 
+      {value === 'settings' || project.registryModel !== 'LEGACY' ? null : (
+        <ProjectMigrationToast orgId={orgId} projectId={projectId} />
+      )}
+
       <Tabs className="container" value={value}>
         <Tabs.List>
           <Tabs.Trigger value={TabValue.Targets} asChild>
@@ -142,12 +153,12 @@ export const ProjectLayout = ({
           </Tabs.Trigger>
           {canAccessProject(ProjectAccessScope.Alerts, org.me) && (
             <Tabs.Trigger value={TabValue.Alerts} asChild>
-              <NextLink href={`/${orgId}/${projectId}/alerts`}>Alerts</NextLink>
+              <NextLink href={`/${orgId}/${projectId}/view/alerts`}>Alerts</NextLink>
             </Tabs.Trigger>
           )}
           {canAccessProject(ProjectAccessScope.Settings, org.me) && (
             <Tabs.Trigger value={TabValue.Settings} asChild>
-              <NextLink href={`/${orgId}/${projectId}/settings`}>Settings</NextLink>
+              <NextLink href={`/${orgId}/${projectId}/view/settings`}>Settings</NextLink>
             </Tabs.Trigger>
           )}
         </Tabs.List>

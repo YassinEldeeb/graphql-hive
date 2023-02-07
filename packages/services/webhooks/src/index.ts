@@ -3,13 +3,12 @@ import {
   createErrorHandler,
   createServer,
   registerShutdown,
+  registerTRPC,
   reportReadiness,
   startHeartbeats,
   startMetrics,
 } from '@hive/service-common';
 import * as Sentry from '@sentry/node';
-import type { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify';
-import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import { webhooksApiRouter } from './api';
 import { env } from './environment';
 import { createScheduler } from './scheduler';
@@ -31,6 +30,7 @@ async function main() {
     tracing: false,
     log: {
       level: env.log.level,
+      requests: env.log.requests,
     },
   });
 
@@ -55,7 +55,7 @@ async function main() {
           enabled: true,
           endpoint: env.heartbeat.endpoint,
           intervalInMS: 20_000,
-          onError: server.log.error,
+          onError: e => server.log.error(e, `Heartbeat failed with error`),
           isReady: readiness,
         })
       : startHeartbeats({ enabled: false });
@@ -68,13 +68,10 @@ async function main() {
       },
     });
 
-    await server.register(fastifyTRPCPlugin, {
-      prefix: '/trpc',
-      trpcOptions: {
-        router: webhooksApiRouter,
-        createContext({ req }: CreateFastifyContextOptions): Context {
-          return { logger: req.log, errorHandler, schedule };
-        },
+    await registerTRPC(server, {
+      router: webhooksApiRouter,
+      createContext({ req }): Context {
+        return { req, errorHandler, schedule };
       },
     });
 

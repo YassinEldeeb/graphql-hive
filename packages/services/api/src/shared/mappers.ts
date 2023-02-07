@@ -20,12 +20,15 @@ import type {
 import type {
   ActivityObject,
   DateRange,
+  DeletedCompositeSchema as DeletedCompositeSchemaEntity,
   Member,
   Organization,
   PersistedOperation,
   Project,
+  PushedCompositeSchema as PushedCompositeSchemaEntity,
   SchemaObject,
   SchemaVersion as SchemaVersionEntity,
+  SingleSchema as SingleSchemaEntity,
   Target,
   Token,
   User,
@@ -121,13 +124,11 @@ export type SchemaComparePayload =
 export type SchemaCompareResult =
   | readonly [SchemaObject, SchemaObject]
   | readonly [undefined | null, SchemaObject];
-export interface Schema {
-  id: string;
-  author: string;
-  source: string;
-  date: string;
-  service?: string | null;
-}
+
+export type SingleSchema = SingleSchemaEntity;
+export type PushedCompositeSchema = PushedCompositeSchemaEntity;
+export type DeletedCompositeSchema = DeletedCompositeSchemaEntity;
+export type Schema = SingleSchema | PushedCompositeSchema;
 
 export interface OperationsStats {
   organization: string;
@@ -138,10 +139,10 @@ export interface OperationsStats {
 }
 
 export interface DurationStats {
-  '75.0': number | null;
-  '90.0': number | null;
-  '95.0': number | null;
-  '99.0': number | null;
+  p75: number | null;
+  p90: number | null;
+  p95: number | null;
+  p99: number | null;
 }
 
 export type TargetsEstimationDateFilter = {

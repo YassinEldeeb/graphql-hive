@@ -1,4 +1,5 @@
 import React from 'react';
+import { AnyVariables, CombinedError, UseQueryState } from 'urql';
 import {
   Alert,
   AlertDescription,
@@ -9,7 +10,6 @@ import {
   Code,
   Link,
 } from '@chakra-ui/react';
-import { CombinedError, UseQueryState } from 'urql';
 import { Spinner } from './Spinner';
 
 export const QueryError: React.FC<{
@@ -57,7 +57,7 @@ export const QueryError: React.FC<{
   );
 };
 
-export class DataWrapper<TData, TVariables> extends React.Component<{
+export class DataWrapper<TData, TVariables extends AnyVariables> extends React.Component<{
   query: UseQueryState<TData, TVariables>;
   showStale?: boolean;
   loading?: boolean;
