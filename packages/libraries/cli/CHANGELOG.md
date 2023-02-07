@@ -1,5 +1,13 @@
 # @graphql-hive/cli
 
+## 0.19.13
+
+### Patch Changes
+
+- [#1261](https://github.com/kamilkisiela/graphql-hive/pull/1261)
+  [`ce829b50`](https://github.com/kamilkisiela/graphql-hive/commit/ce829b50721175181d5f945c392cd1a8b51a85df)
+  Thanks [@renovate](https://github.com/apps/renovate)! - update oclif
+
 ## 0.19.12
 
 ### Patch Changes
